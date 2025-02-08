@@ -1,28 +1,36 @@
-const { exec } = require("youtube-dl-exec");
+const ytdl = require("@distube/ytdl-core");
 
 const downloadMedia = async (req, res) => {
-  const { url, format } = req.query;
-  if (!url) return res.status(400).json({ error: "URL is required" });
+  const videoUrl = req.query.url;
+  const type = req.query.type || "video"; // "audio" or "video"
 
-  const isAudio = format === "mp3";
-  const fileExtension = isAudio ? "mp3" : "mp4";
-  const contentType = isAudio ? "audio/mpeg" : "video/mp4";
+  if (!videoUrl || !ytdl.validateURL(videoUrl)) {
+    return res.status(400).json({ error: "Invalid YouTube URL" });
+  }
 
   try {
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename="download.${fileExtension}"`
-    );
-    res.setHeader("Content-Type", contentType);
+    const info = await ytdl.getInfo(videoUrl);
+    let format;
 
-    exec(url, {
-      format: isAudio ? "bestaudio" : "bestvideo+bestaudio",
-      output: "-",
-      externalDownloader: "aria2c",
-      externalDownloaderArgs: ["-x16", "-s16", "-k1M"],
-    }).stdout.pipe(res);
+    if (type === "video") {
+      format = ytdl.chooseFormat(info.formats, { quality: "highestvideo" });
+    } else {
+      format = ytdl.chooseFormat(info.formats, { filter: "audioonly" });
+    }
+
+    if (!format || !format.url) {
+      return res.status(500).json({ error: "No valid download link found" });
+    }
+
+    res.json({
+      success: true,
+      downloadUrl: format.url,
+      format: format.mimeType,
+      quality: format.qualityLabel || "Audio Only",
+    });
   } catch (error) {
-    res.status(500).json({ error: "Download failed", details: error.message });
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch video details" });
   }
 };
 
