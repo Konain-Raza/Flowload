@@ -1,33 +1,26 @@
-const { exec } = require("child_process");
+const { exec } = require("youtube-dl-exec");
 
 const downloadMedia = async (req, res) => {
   const { url, format } = req.query;
   if (!url) return res.status(400).json({ error: "URL is required" });
-  if (!format || !["mp3", "mp4"].includes(format))
-    return res.status(400).json({ error: "Format must be 'mp3' or 'mp4'" });
+
+  const isAudio = format === "mp3";
+  const fileExtension = isAudio ? "mp3" : "mp4";
+  const contentType = isAudio ? "audio/mpeg" : "video/mp4";
 
   try {
-    const outputFormat = format === "mp3" ? "bestaudio" : "bestvideo+bestaudio";
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename="download.${format}"`
+      `attachment; filename="download.${fileExtension}"`
     );
-    res.setHeader("Content-Type", format === "mp3" ? "audio/mpeg" : "video/mp4");
+    res.setHeader("Content-Type", contentType);
 
-    const process = exec(`yt-dlp -f "${outputFormat}" -o - "${url}"`);
-
-    process.stdout.pipe(res);
-
-    process.on("error", (err) => {
-      console.error("Download error:", err);
-      res.status(500).json({ error: "Download failed", details: err.message });
-    });
-
-    process.on("close", (code) => {
-      if (code !== 0) {
-        res.status(500).json({ error: "Download failed", details: `Process exited with code ${code}` });
-      }
-    });
+    exec(url, {
+      format: isAudio ? "bestaudio" : "bestvideo+bestaudio",
+      output: "-",
+      externalDownloader: "aria2c",
+      externalDownloaderArgs: ["-x16", "-s16", "-k1M"],
+    }).stdout.pipe(res);
   } catch (error) {
     res.status(500).json({ error: "Download failed", details: error.message });
   }
