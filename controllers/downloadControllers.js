@@ -1,12 +1,16 @@
 const ytdl = require("@distube/ytdl-core");
-const { HttpsProxyAgent } = require("proxy-agent");
+const { HttpsProxyAgent } = require("https-proxy-agent");
+const { Agent } = require("undici");
 
-// Correct proxy format (replace with a valid one)
-const proxyUrl = "http://45.81.225.94:8080"; // Use the correct port
+// Replace with a valid proxy URL
+const proxyUrl = "http://45.81.225.94:8080"; 
+
+const proxyAgent = new HttpsProxyAgent(proxyUrl);
+const client = new Agent({ connect: { proxy: proxyUrl } });
 
 const options = {
   requestOptions: {
-    agent: new HttpsProxyAgent(proxyUrl),
+    client, // ✅ Correct usage for undici
   },
 };
 
