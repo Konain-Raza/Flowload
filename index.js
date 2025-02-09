@@ -12,7 +12,7 @@ app.get("/", (req, res) => {
 app.use("/api", routes);
 
 //for development
-app.listen(PORT, () => console.log(`🚀 FlowLoad API running on port ${PORT}`));
+// app.listen(PORT, () => console.log(`🚀 FlowLoad API running on port ${PORT}`));
 
 //for production
-// export default app;
+export default app;
