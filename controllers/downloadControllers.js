@@ -1,4 +1,14 @@
 const ytdl = require("@distube/ytdl-core");
+const { HttpsProxyAgent } = require("proxy-agent");
+
+// Correct proxy format (replace with a valid one)
+const proxyUrl = "http://45.81.225.94:8080"; // Use the correct port
+
+const options = {
+  requestOptions: {
+    agent: new HttpsProxyAgent(proxyUrl),
+  },
+};
 
 const downloadMedia = async (req, res) => {
   const videoUrl = req.query.url;
@@ -8,7 +18,7 @@ const downloadMedia = async (req, res) => {
   }
 
   try {
-    const info = await ytdl.getInfo(videoUrl);
+    const info = await ytdl.getInfo(videoUrl, options);
     const videoFormat = ytdl.chooseFormat(info.formats, { quality: "highestvideo" });
     const audioFormat = ytdl.chooseFormat(info.formats, { filter: "audioonly" });
 
@@ -30,7 +40,7 @@ const downloadMedia = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching media:", error);
     res.status(500).json({ error: "Failed to fetch media details" });
   }
 };
