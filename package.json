@@ -12,6 +12,7 @@
   "description": "",
   "dependencies": {
     "@distube/ytdl-core": "4.16.0",
+    "@vreden/youtube_scraper": "^1.2.5",
     "axios": "^1.7.9",
     "cors": "^2.8.5",
     "express": "^4.21.2",

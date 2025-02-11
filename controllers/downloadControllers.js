@@ -1,7 +1,7 @@
 const ytdl = require("@distube/ytdl-core");
 const { HttpsProxyAgent } = require("https-proxy-agent");
 const { Agent } = require("undici");
-
+const { search, ytmp3, ytmp4, ytdlv2, channel } = require('@vreden/youtube_scraper');
 // Replace with a valid proxy URL
 const proxyUrl = "http://45.81.225.94:8080"; 
 
@@ -17,32 +17,34 @@ const options = {
 const downloadMedia = async (req, res) => {
   const videoUrl = req.query.url;
 
-  if (!videoUrl || !ytdl.validateURL(videoUrl)) {
-    return res.status(400).json({ error: "Invalid YouTube URL" });
-  }
+  // if (!videoUrl || !ytdl.validateURL(videoUrl)) {
+  //   return res.status(400).json({ error: "Invalid YouTube URL" });
+  // }
 
   try {
-    const info = await ytdl.getInfo(videoUrl, options);
-    const videoFormat = ytdl.chooseFormat(info.formats, { quality: "highestvideo" });
-    const audioFormat = ytdl.chooseFormat(info.formats, { filter: "audioonly" });
+    const url = 'https://www.youtube.com/watch?v=xZYTTa5x-xQ&list=RDxZYTTa5x-xQ';
 
-    if (!videoFormat?.url || !audioFormat?.url) {
-      return res.status(500).json({ error: "No valid download links found" });
-    }
-
+    // quality download, pilih di Quality Available
+    const quality = "128"
+    
+    /* 
+     * atau kamu bisa langsung url
+     * saja untuk default quality (128)
+     * example: ytmp3(url)
+    */
+    
+    const info = await ytmp3(url, quality)
+        .then(result => {
+            if (result.status) {
+                console.log('Download Link:', result.download);
+                console.log('Metadata:', result.metadata);
+            } else {
+                console.error('Error:', result.result);
+            }
+        });
     res.json({
-      success: true,
-      video: {
-        url: videoFormat.url,
-        format: videoFormat.mimeType,
-        quality: videoFormat.qualityLabel,
-      },
-      audio: {
-        url: audioFormat.url,
-        format: audioFormat.mimeType,
-        quality: "Audio Only",
-      },
-    });
+      info
+    })
   } catch (error) {
     console.error("Error fetching media:", error);
     res.status(500).json({ error: "Failed to fetch media details" });
