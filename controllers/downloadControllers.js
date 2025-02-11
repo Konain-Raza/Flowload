@@ -24,7 +24,8 @@ const downloadMedia = async (req, res) => {
     if (!searchResult || !searchResult.title) {
       return res.status(404).json({ error: "Video not found" });
     }
-    console.log(`Downloading "${searchResult}"...`);
+
+    console.log(`Downloading "${searchResult.title}"...`);
 
     const metadata = {
       title: searchResult.title,
@@ -43,7 +44,8 @@ const downloadMedia = async (req, res) => {
     const fetchDownloadUrl = async (quality) => {
       try {
         const response = await axios.get(
-          `https://ytdl.vreden.web.id/convert.php/${videoId}/${quality}`
+          `https://ytdl.vreden.web.id/convert.php/${videoId}/${quality}`,
+          { timeout: 50000 } // 5 seconds timeout for the initial conversion request
         );
 
         if (!response.data || !response.data.convert) {
@@ -51,9 +53,20 @@ const downloadMedia = async (req, res) => {
         }
 
         let retries = 0;
-        while (retries < 10) { // Max retries: 10
+        const maxRetries = 10; // Max retries: 10
+        const delay = 2000; // 2 seconds delay
+        const totalTimeout = maxRetries * delay; // 20 seconds max wait
+
+        const startTime = Date.now();
+
+        while (retries < maxRetries) {
+          if (Date.now() - startTime > totalTimeout) {
+            throw new Error("Conversion timed out");
+          }
+
           const progress = await axios.get(
-            `https://ytdl.vreden.web.id/progress.php/${response.data.convert}`
+            `https://ytdl.vreden.web.id/progress.php/${response.data.convert}`,
+            { timeout: 50000 } // 3 seconds timeout for each progress check
           );
 
           if (progress.data.status === "Error") {
@@ -64,7 +77,7 @@ const downloadMedia = async (req, res) => {
             return progress.data.url;
           }
 
-          await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait 2s
+          await new Promise((resolve) => setTimeout(resolve, delay));
           retries++;
         }
 
