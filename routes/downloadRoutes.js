@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { downloadMedia } = require("../controllers/downloadControllers.js");
+const { downloadMedia } = require("../controllers/downloadControllers");
 
 router.get("/download", downloadMedia);
 
