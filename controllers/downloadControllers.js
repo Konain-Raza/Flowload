@@ -35,7 +35,10 @@ const downloadMedia = async (req, res) => {
       thumbnail: searchResult.thumbnail,
     };
 
-    const qualities = { audio: 128, video: 1080 }; 
+    const qualities = {
+      audio: 128,
+      video: 720,
+    };
 
     const fetchDownloadUrl = async (quality) => {
       try {
