@@ -4,94 +4,161 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Flowload - The YouTube Downloader You Deserve 🎥✨</title>
-    <!-- <link rel="shortcut icon" href="/assets/icons/icon.ico" type="image/x-icon"> -->
-    <link rel="shortcut icon" href="/assets/icons/icon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="/css/index.css" />
-
+    <link
+      rel="shortcut icon"
+      href="/public/assets/icons/icon.ico"
+      type="image/x-icon"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      
+      body {
+        font-family: "Poppins", serif;
+      }
     </style>
   </head>
   <body
     class="bg-gray-900 text-white flex flex-col items-center justify-between min-h-screen p-6"
   >
     <div
-      class="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-10 sm:mt-20 items-start w-full max-w-6xl mx-auto"
+      class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start w-full max-w-6xl mx-auto"
     >
-    <header class="text-center lg:text-left space-y-6">
-      <h1 class="text-4xl md:text-5xl font-extrabold leading-tight text-white">
-        🎬 Flowload - Grab Your Favorite Videos in Seconds
-      </h1>
-      <p class="text-gray-300 text-lg md:text-xl">
-        Convert YouTube videos to MP3 & MP4 in just a click. **No ads. No nonsense. Just speed.**
-      </p>
-      <ul class="space-y-2 text-gray-400 text-lg">
-        <li>✅ <strong>Blazing Fast</strong> – No pop-ups, no delays.</li>
-        <li>✅ <strong>MP3 & MP4 Support</strong> – High-quality conversions.</li>
-        <li>✅ <strong>Universal Compatibility</strong> – Works on any device.</li>
-        <li>✅ <strong>Privacy First</strong> – No tracking, no hassle.</li>
-      </ul>
-    </header>
+      <header class="text-center lg:text-left space-y-6 mt-10">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white">
+          🎬 Flowload – Turn Your YouTube FOMO Into Instant Downloads
+        </h1>
+        <p class="text-gray-300 text-lg md:text-xl">
+          Grab your favorite YouTube videos with just one click. **No ads. No
+          pop-ups. Just pure, uninterrupted fun.**
+        </p>
+        <ul class="space-y-2 text-gray-400 text-lg">
+          <li>
+            ✅ <strong>Super Simple</strong> – One click, and your video is
+            ready. It’s like magic, but real!
+          </li>
+          <li>
+            ✅ <strong>MP3 & MP4? Yes, Please!</strong> – Whether you’re here
+            for the tunes or the full video experience.
+          </li>
+          <li>
+            ✅ <strong>Works Everywhere</strong> – On your phone, tablet, or
+            that old laptop. We’ve got you covered.
+          </li>
+          <li>
+            ✅ <strong>Privacy is Our Priority</strong> – No creepy tracking. We
+            just want you to enjoy your downloads, hassle-free.
+          </li>
+        </ul>
+      </header>
 
       <div class="w-full max-w-md m-auto bg-gray-800 p-6 rounded-lg shadow-lg">
         <h2 class="text-2xl font-semibold text-white text-center mb-4">
           🔗 Paste YouTube URL Below
         </h2>
-
         <form id="download-form" class="flex flex-col space-y-4">
-          <!-- Input and Format Selection in One Line -->
           <div class="flex space-x-4">
             <div class="relative flex-1">
-              <div class="absolute inset-y-0 left-3 flex items-center text-gray-500">
-                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 21 21">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.15 5.6h.01m3.337 1.913h.01m-6.979 0h.01M5.541 11h.01M15 15h2.706a1.957 1.957 0 0 0 1.883-1.325A9 9 0 1 0 2.043 11.89 9.1 9.1 0 0 0 7.2 19.1a8.62 8.62 0 0 0 3.769.9A2.013 2.013 0 0 0 13 18v-.857A2.034 2.034 0 0 1 15 15Z"></path>
+              <div
+                class="absolute inset-y-0 left-3 flex items-center text-gray-500"
+              >
+                <svg
+                  class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                  />
                 </svg>
               </div>
-              <input id="url" type="text" placeholder="Paste YouTube URL here" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg pl-10 p-3 w-full focus:ring-blue-500 focus:border-blue-500">
+              <input
+                id="url"
+                type="text"
+                placeholder="Paste YouTube URL here"
+                class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg pl-10 p-3 w-full focus:ring-blue-500 focus:border-blue-500"
+              />
             </div>
 
-            <!-- Format Dropdown -->
             <div class="relative">
-              <select id="format" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option value="mp3">MP3</option>
-                <option value="mp4">MP4</option>
+              <select
+                id="format"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
+                <option value="mp3">Audio</option>
+                <option value="mp4">Video</option>
               </select>
             </div>
           </div>
-
-          <!-- Convert Button on New Line -->
-          <button id="convert-btn" type="submit" class="inline-flex justify-center items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-all duration-300">
+          <button
+            id="convert-btn"
+            type="submit"
+            class="inline-flex justify-center items-center px-4 py-3 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-all duration-300"
+          >
             <span id="button-text">Convert</span>
-            <svg id="spinner" role="status" class="hidden w-4 h-4 ml-2 animate-spin" viewBox="0 0 100 101" fill="none">
-              <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"></path>
-              <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"></path>
+            <svg
+              id="spinner"
+              role="status"
+              class="hidden w-4 h-4 ml-2 animate-spin"
+              viewBox="0 0 100 101"
+              fill="none"
+            >
+              <path
+                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                fill="#E5E7EB"
+              ></path>
+              <path
+                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                fill="currentColor"
+              ></path>
             </svg>
           </button>
         </form>
         <div id="result" class="mt-4 hidden">
-          <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-            <a href="#">
-              <img id="thumbnail" class="rounded-t-lg" src="" alt="Thumbnail">
-            </a>
+          <div
+            class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700"
+          >
+            <a href="#"
+              ><img id="thumbnail" class="rounded-t-lg" src="" alt="Thumbnail"
+            /></a>
             <div class="p-5">
-              <a href="#">
-                <h5 id="title" class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"></h5>
-              </a>
-              <a href="#"><h5 id="title" class="mb-2 text-xl font-bold"></h5></a>
-
-              <p id="views" class="mb-4 inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-all duration-300"></p>
+              <a href="#"
+                ><h5
+                  id="title"
+                  class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                ></h5
+              ></a>
+              <button
+                id="views"
+                class="flex justify-between hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800"
+              ></button>
               <p id="description" class="mb-3 text-sm text-gray-300"></p>
               <div class="flex space-x-2 justify-between">
-                <a id="download-btn" class="w-full justify-center inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-all duration-300" target="_blank">
-                </a>
+                <a
+                  id="download-btn"
+                  class="w-full justify-center inline-flex items-center px-4 py-3 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-all duration-300"
+                  target="_blank"
+                ></a>
               </div>
             </div>
           </div>
+        </div>
       </div>
     </div>
 
-    <footer class="mt-10 text-center w-full justify-center text-gray-400 text-sm">
+    <footer
+      class="mt-10 text-center w-full justify-center text-gray-400 text-sm"
+    >
       <div class="text-lg text-gray-500">
         Built with <span class="animate-pulse text-red-500">❤️</span> by
         <a
@@ -100,11 +167,12 @@
           >Konain Raza</a
         >.
       </div>
-      <p class="mt-2 text-xs text-gray-500">
+      <p class="mt-2 text-md text-gray-500">
         🚀 Flowload - Because YouTube deserves a better downloader!
       </p>
     </footer>
   </body>
+
   <script>
     document
       .getElementById("download-form")
@@ -112,13 +180,13 @@
         event.preventDefault();
         fetchData();
       });
-  
+
     async function fetchData() {
       const url = document.getElementById("url").value.trim();
-      const format = document.getElementById("format").value; // Get selected format
-  
+      const format = document.getElementById("format").value;
+
       if (!url) return alert("Please enter a valid YouTube URL.");
-  
+
       const button = document.getElementById("convert-btn");
       const buttonText = document.getElementById("button-text");
       const spinner = document.getElementById("spinner");
@@ -127,57 +195,50 @@
       const title = document.getElementById("title");
       const views = document.getElementById("views");
       const description = document.getElementById("description");
-      const downloadLink = document.getElementById("download-btn"); // Single download button
-  
+      const downloadLink = document.getElementById("download-btn");
+
       if (buttonText) buttonText.textContent = "";
       if (spinner) spinner.classList.remove("hidden");
-  
+
       button.disabled = true;
       resultContainer.classList.add("hidden");
-  
+
       try {
-        console.log("Fetching data...", format); // ✅ Check if function is called
+        const response = await fetch(
+          `/api/download?url=${encodeURIComponent(url)}&format=${format}`
+        );
+        const data = await response.json();
 
-    const response = await fetch(`/api/download?url=${encodeURIComponent(url)}&format=${format}`);
-
-    console.log("Response status:", response.status); // ✅ Log HTTP status
-
-    const data = await response.json();
-    console.log("API Response:", data); // ✅ Log API data
-
-    if (!data.status) {
-      throw new Error(data.error || "Unknown error occurred.");
-    }
-  
-        function formatViews(views) {
-          if (views >= 1_000_000) return (views / 1_000_000).toFixed(1) + "M views";
-          if (views >= 1_000) return (views / 1_000).toFixed(1) + "K views";
-          return views + " views";
+        if (!data.status) {
+          throw new Error(data.error || "Unknown error occurred.");
         }
-  
-        if (thumbnail) thumbnail.src = data.metadata?.thumbnail || "default-thumbnail.jpg";
-        if (title) title.innerText = data.metadata?.title || "No Title Available";
-  
+
+        if (thumbnail)
+          thumbnail.src = data.metadata?.thumbnail || "default-thumbnail.jpg";
+        if (title)
+          title.innerText = data.metadata?.title || "No Title Available";
         if (views) {
           views.innerHTML = data.metadata?.views
             ? `<svg class="w-5 h-5 me-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5C7.8 4.5 4 7.5 2.5 12c1.5 4.5 5.3 7.5 9.5 7.5s8-3 9.5-7.5c-1.5-4.5-5.3-7.5-9.5-7.5zM12 15a3 3 0 100-6 3 3 0 000 6z" />
-              </svg> ${formatViews(data.metadata.views)} `
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5C7.8 4.5 4 7.5 2.5 12c1.5 4.5 5.3 7.5 9.5 7.5s8-3 9.5-7.5c-1.5-4.5-5.3-7.5-9.5-7.5zM12 15a3 3 0 100-6 3 3 0 000 6z" />
+      </svg> ${formatViews(data.metadata.views)}`
             : "Views not available";
         }
-  
+
         if (description) {
           description.innerText = data.metadata?.description
             ? data.metadata.description.substring(0, 200) + "..."
             : "No description available.";
         }
-  
+
         if (downloadLink) {
-          console.log(data.download);
           downloadLink.href = data.download.url.url;
-          downloadLink.innerText = data.download?.format === "mp4" ? "🎥 Download Video" : "🎵 Download Audio";
+          downloadLink.innerText =
+            data.download?.format === "mp4"
+              ? "🎥 Download Video"
+              : "🎵 Download Audio";
         }
-  
+
         resultContainer.classList.remove("hidden");
       } catch (error) {
         alert("Failed to fetch video. Please try again.");
@@ -187,6 +248,11 @@
         if (spinner) spinner.classList.add("hidden");
       }
     }
+
+    function formatViews(views) {
+      if (views >= 1_000_000) return (views / 1_000_000).toFixed(1) + "M";
+      if (views >= 1_000) return (views / 1_000).toFixed(1) + "K";
+      return views;
+    }
   </script>
-  
 </html>
