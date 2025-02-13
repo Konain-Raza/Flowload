@@ -1,77 +1,37 @@
-const youtubedl = require("youtube-dl-exec");
+const { ytmp3, ytmp4 } = require("@vreden/youtube_scraper");
 
 const downloadMedia = async (req, res) => {
   try {
     const { url, format } = req.query;
 
     if (!url) {
-      return res.status(400).json({ error: "Please provide a YouTube URL" });
+      return res.status(400).json({ error: "YouTube URL is required" });
     }
 
     if (!["mp3", "mp4"].includes(format)) {
-      return res.status(400).json({ error: "Invalid format. Use 'mp3' for audio or 'mp4' for video." });
+      return res.status(400).json({ error: "Invalid format. Use 'mp3' or 'mp4'." });
     }
 
-    console.log(`Fetching media data for: ${url}`);
+    const downloadFunction = format === "mp3" ? ytmp3 : ytmp4;
+    const result = await downloadFunction(url);
 
-    const video = await youtubedl(url, {
-      dumpSingleJson: true,
-      noCheckCertificates: true,
-      noWarnings: true,
-      preferFreeFormats: true,
-      addHeader: ["referer:youtube.com", "user-agent:googlebot"],
+    if (!result.status || !result.download) {
+      return res.status(400).json({ error: "Failed to process media. Please try again." });
+    }
+
+    res.json({
+      status: true,
+      metadata: result.metadata,
+      download: {
+        url: result.download,
+        format,
+        quality: "Best Available",
+      },
     });
-
-    console.log("Fetched Video Data:", Object.keys(video));
-
-    if (!video || !video.formats || video.formats.length === 0) {
-      throw new Error("No available formats");
-    }
-
-    let result = null;
-
-    if (format === "mp3") {
-      const bestAudio = video.formats.find(
-        (f) => f.resolution === "audio only" && f.ext === "m4a"
-      );
-
-      if (!bestAudio) {
-        throw new Error("No suitable audio format found");
-      }
-
-      result = {
-        type: "audio",
-        format: bestAudio.ext,
-        url: bestAudio.url,
-        title: video.title,
-        thumbnail: video.thumbnail,
-      };
-    } else {
-      const bestVideo = video.formats.find(
-        (f) => f.ext === "mp4" && f.acodec !== "none"
-      );
-
-      if (!bestVideo) {
-        throw new Error("No suitable video format found");
-      }
-
-      result = {
-        type: "video",
-        format: bestVideo.ext,
-        url: bestVideo.url,
-        title: video.title,
-        thumbnail: video.thumbnail,
-      };
-    }
-
-    res.json(result);
   } catch (error) {
-    console.error("Error fetching media data:", error);
-    res.status(500).json({
-      error: "Failed to fetch media data",
-      details: error.message || "No additional details available",
-    });
+    console.error("Download error:", error);
+    res.status(500).json({ error: "Internal Server Error. Please try again later." });
   }
 };
 
-export { downloadMedia };
+module.exports = { downloadMedia };
