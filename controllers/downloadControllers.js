@@ -39,7 +39,7 @@ const downloadMedia = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching media:", error);
-    res.status(500).json({ error: "Failed to fetch media details" });
+    res.status(500).json({ error: "Failed to fetch media details", error});
   }
 };
 
