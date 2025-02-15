@@ -1,36 +1,46 @@
-const { ytmp3, ytmp4 } = require("@vreden/youtube_scraper");
+const ytdl = require("@distube/ytdl-core");
+
+const options = {
+  requestOptions: {
+    headers: {
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+    },
+  },
+};
+
 
 const downloadMedia = async (req, res) => {
+  const videoUrl = req.query.url;
+
+  if (!videoUrl || !ytdl.validateURL(videoUrl)) {
+    return res.status(400).json({ error: "Invalid YouTube URL" });
+  }
+
   try {
-    const { url, format } = req.query;
+    const info = await ytdl.getInfo(videoUrl, options);
+    const videoFormat = ytdl.chooseFormat(info.formats, { quality: "highestvideo" });
+    const audioFormat = ytdl.chooseFormat(info.formats, { filter: "audioonly" });
 
-    if (!url) {
-      return res.status(400).json({ error: "YouTube URL is required" });
-    }
-
-    if (!["mp3", "mp4"].includes(format)) {
-      return res.status(400).json({ error: "Invalid format. Use 'mp3' or 'mp4'." });
-    }
-
-    const downloadFunction = format === "mp3" ? ytmp3 : ytmp4;
-    const result = await downloadFunction(url);
-
-    if (!result.status || !result.download) {
-      return res.status(400).json({ error: "Failed to process media. Please try again." });
+    if (!videoFormat?.url || !audioFormat?.url) {
+      return res.status(500).json({ error: "No valid download links found" });
     }
 
     res.json({
-      status: true,
-      metadata: result.metadata,
-      download: {
-        url: result.download,
-        format,
-        quality: "Best Available",
+      success: true,
+      video: {
+        url: videoFormat.url,
+        format: videoFormat.mimeType,
+        quality: videoFormat.qualityLabel,
+      },
+      audio: {
+        url: audioFormat.url,
+        format: audioFormat.mimeType,
+        quality: "Audio Only",
       },
     });
   } catch (error) {
-    console.error("Download error:", error);
-    res.status(500).json({ error: "Internal Server Error. Please try again later." });
+    console.error("Error fetching media:", error);
+    res.status(500).json({ error: "Failed to fetch media details" });
   }
 };
 
