@@ -1,5 +1,5 @@
 const express = require("express");
-const routes = require("./routes/downloadRoutes.js");
+const routes = require("../routes/downloadRoutes.js");
 const cors = require("cors");
 const app = express();
 const path = require("path");
@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
 app.use("/api", routes);
 
 //for development
-// app.listen(3000, () => console.log(`🚀 FlowLoad API running on port ${PORT}`));
+app.listen(3000, () => console.log(`🚀 FlowLoad API running on port ${PORT}`));
 // 
 //for production
-export default app;
+// export default app;
