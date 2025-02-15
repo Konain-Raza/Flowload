@@ -1,48 +1,50 @@
-const youtubedl = require('youtube-dl-exec');
+const puppeteer = require("puppeteer");
+const ytdl = require("@distube/ytdl-core");
+
 
 const downloadMedia = async (req, res) => {
+
+
+  const videoUrl = req.query.url;
+
+  if (!videoUrl || !ytdl.validateURL(videoUrl)) {
+    return res.status(400).json({ error: "Invalid YouTube URL" });
+  }
+
   try {
-    // 🔹 Test Data (Default YouTube URL if none is provided)
-    const videoUrl = req.query.url || "https://www.youtube.com/watch?v=6xKWiCMKKJg";
+    const options = {
+      requestOptions: {
+        headers: {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+          "referer": "youtube.com",
+          "user-agent": "googlebot"
+        },
+      },
+    };    
 
-    // 🔸 Fetch Video Info
-    const output = await youtubedl(videoUrl, {
-      dumpSingleJson: true,
-      noCheckCertificates: true,
-      noWarnings: true,
-      preferFreeFormats: true,
-      addHeader: ['referer:youtube.com', 'user-agent:googlebot']
-    });
+    const info = await ytdl.getInfo(videoUrl, options);
+    const videoFormat = ytdl.chooseFormat(info.formats, { quality: "highestvideo" });
+    const audioFormat = ytdl.chooseFormat(info.formats, { filter: "audioonly" });
 
-    // 🔹 Extract Video & Audio Info
-    const videoFormats = output.formats.filter(f => f.vcodec !== 'none' && f.acodec !== 'none');
-    const audioFormats = output.formats.filter(f => f.vcodec === 'none' && f.acodec !== 'none');
-
-    // 🔸 Get the Best Video and Audio Format
-    const bestVideo = videoFormats[0];
-    const bestAudio = audioFormats[0];
-
-    if (!bestVideo || !bestAudio) {
+    if (!videoFormat?.url || !audioFormat?.url) {
       return res.status(500).json({ error: "No valid download links found" });
     }
 
-    // 🔹 Send Response
     res.json({
       success: true,
       video: {
-        url: bestVideo.url,
-        format: bestVideo.ext,
-        quality: bestVideo.format_note,
+        url: videoFormat.url,
+        format: videoFormat.mimeType,
+        quality: videoFormat.qualityLabel,
       },
       audio: {
-        url: bestAudio.url,
-        format: bestAudio.ext,
+        url: audioFormat.url,
+        format: audioFormat.mimeType,
         quality: "Audio Only",
       },
     });
-
   } catch (error) {
-    console.error("❌ Error fetching media:", error);
+    console.error("Error fetching media:", error);
     res.status(500).json({ error: "Failed to fetch media details" });
   }
 };
