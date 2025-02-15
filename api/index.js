@@ -20,8 +20,13 @@ app.get("/video-info", (req, res) => {
   const ytdl = new YtdlCore({
     poToken: "MnRk7Rrtm32v_GTVG9wMCxWvMmaVDFnfK50V7MieLKzyLOZwyw5Ukq4VJNAIjpBn8N3NTsrqbKaIzV7R38nJeq98nNFxEzi78lSZy11qIeyDieHrTl5MueWIx9NUDGLPiCbbnEwD3LajKjBGUYMirmU6MOvJ0w==",
     visitorData: "CgtkOWJXSnZiRWtoSSjA6MK9BjIKCgJQSxIEGgAgWQ%3D%3D",
-    clients: ['web', 'mweb'],
-    disablePoTokenAutoGeneration: true,
+    clients: ["web", "mweb"],
+    headers: {
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      "Accept-Language": "en-US,en;q=0.9",
+      "Accept-Encoding": "gzip, deflate, br",
+    },
+    logDisplay: ["debug", "info", "error"],
   });
   // Removed client configuration
   const VIDEO_ID = String(req.query.id); // Ensure it's a string
