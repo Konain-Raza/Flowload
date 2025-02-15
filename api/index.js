@@ -1,81 +1,70 @@
-const express = require('express');
-const { YtdlCore, YTDL_VideoInfo, YTDL_VideoFormat } = require('@ybd-project/ytdl-core/serverless');
+const express = require("express");
+const {
+  YtdlCore,
+  YTDL_VideoInfo,
+  YTDL_VideoFormat,
+} = require("@ybd-project/ytdl-core/serverless");
 const app = express();
-const port = 3000;  // Local port to run the server
+const port = 3000; // Local port to run the server
 
 // Middleware to handle CORS
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', '*');
-    next();
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+  next();
 });
 
-const oauth2Credentials = {
-    accessToken: 'ya29.a0AXeO80QRyqY16ysMmUu1HyA_PleYN0op2QWkz0olsCxelrmyfr2USQ3ysE2qS7ErFU3Hdg9g7K9qKCP3jMiVM6ScfcSbRgyj0rwXEG7MNKO2I2D3tkJ63L-pADcwqDt3uzvfcqhwjuvzYctIh3CCqWZ426PsKwyPQIBwNMGqOet3ByKhLnmdaCgYKAV0SARASFQHGX2Mi2FeCr_C47IG2KaJ6qJhZpg0187', // Replace with your actual access_token
-    refreshToken: '1//09HXGOcYqOnRECgYIARAAGAkSNwF-L9Ir8XaACoJRIegMGKs0wmn1QhQrbqCF7GDjd-DmhjVwZyI_4eBc-Qqo-aKysN7pIhUtP0o', // Replace with your actual refresh_token
-    expiryDate: '2025-02-16T11:19:30.890Z', // Replace with your token expiry date
-};
 // Handler for YouTube Video Info
-app.get('/video-info', (req, res) => {
-    const ytdl = new YtdlCore({
-        hl: 'en',
-        gl: 'US',
-        disableDefaultClients: true,
-        disablePoTokenAutoGeneration: true,
-        disableInitialSetup: true,
-        parsesHLSFormat: false,
-        noUpdate: true,
-        logDisplay: ['warning', 'error'],
-        clients: ['mweb', 'web'],
-        filter: 'videoandaudio',
-        html5Player: {
-            useRetrievedFunctionsFromGithub: true,
-        },
-        oauth2Credentials: {
-            accessToken: oauth2Credentials.accessToken,
-            refreshToken: oauth2Credentials.refreshToken,
-            expiryDate: oauth2Credentials.expiryDate,
-        },
+app.get("/video-info", (req, res) => {
+ 
+  const ytdl = new YtdlCore({
+    poToken: "MnRk7Rrtm32v_GTVG9wMCxWvMmaVDFnfK50V7MieLKzyLOZwyw5Ukq4VJNAIjpBn8N3NTsrqbKaIzV7R38nJeq98nNFxEzi78lSZy11qIeyDieHrTl5MueWIx9NUDGLPiCbbnEwD3LajKjBGUYMirmU6MOvJ0w==",
+    visitorData: "CgtkOWJXSnZiRWtoSSjA6MK9BjIKCgJQSxIEGgAgWQ%3D%3D",
+    clients: ['web', 'mweb'],
+    disablePoTokenAutoGeneration: true,
+  });
+  // Removed client configuration
+  const VIDEO_ID = String(req.query.id); // Ensure it's a string
+
+  if (!VIDEO_ID) {
+    return res.status(400).json({
+      error: "No video ID provided",
     });
+  }
 
-    const VIDEO_ID = String(req.query.id);  // Ensure it's a string
+  function errorHandler(err) {
+    console.error(err);
+    res.status(500).json({
+      error: err.message,
+    });
+  }
 
-    if (!VIDEO_ID) {
-        return res.status(400).json({
-            error: 'No video ID provided',
-        });
-    }
+  ytdl
+    .getBasicInfo(`https://www.youtube.com/watch?v=${VIDEO_ID}`)
+    .then((results) => {
+      const filteredFormats =
+        results.formats?.filter((format) => format.itag === 18) || [];
 
-    function errorHandler(err) {
-        console.error(err);
-        res.status(500).json({
-            error: err.message,
-        });
-    }
+      YtdlCore.decipherFormats(filteredFormats, {
+        useRetrievedFunctionsFromGithub: true,
+      })
+        .then(async (formats) => {
+          const VIDEO_INFO = {
+            ...results,
+            formats: YtdlCore.toVideoFormats(formats),
+            full: true,
+          };
 
-    ytdl.getBasicInfo(`https://www.youtube.com/watch?v=${VIDEO_ID}`)
-        .then((results) => {
-            const filteredFormats = results.formats?.filter((format) => format.itag === 18) || [];
-
-            YtdlCore.decipherFormats(filteredFormats, {
-                useRetrievedFunctionsFromGithub: true,
-            })
-                .then(async (formats) => {
-                    const VIDEO_INFO = {
-                        ...results,
-                        formats: YtdlCore.toVideoFormats(formats),
-                        full: true,
-                    };
-
-                    res.json(VIDEO_INFO);
-                })
-                .catch(errorHandler);
+          res.json(VIDEO_INFO);
         })
         .catch(errorHandler);
+    })
+    .catch(errorHandler);
 });
 
 // Start the server
-// export default app;
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Server running on port ${port}`);
+// });
+
+export default app;
