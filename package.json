@@ -12,12 +12,14 @@
   "description": "",
   "dependencies": {
     "@distube/ytdl-core": "^4.16.4",
+    "@sparticuz/chromium": "^132.0.0",
     "@vreden/youtube_scraper": "^1.2.5",
     "cors": "^2.8.5",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
     "nodemon": "^3.1.9",
     "puppeteer": "^24.2.1",
+    "puppeteer-core": "^24.2.1",
     "serve-favicon": "^2.5.0"
   },
   "devDependencies": {
