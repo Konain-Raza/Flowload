@@ -10,6 +10,11 @@ app.use((req, res, next) => {
     next();
 });
 
+const oauth2Credentials = {
+    accessToken: 'ya29.a0AXeO80QRyqY16ysMmUu1HyA_PleYN0op2QWkz0olsCxelrmyfr2USQ3ysE2qS7ErFU3Hdg9g7K9qKCP3jMiVM6ScfcSbRgyj0rwXEG7MNKO2I2D3tkJ63L-pADcwqDt3uzvfcqhwjuvzYctIh3CCqWZ426PsKwyPQIBwNMGqOet3ByKhLnmdaCgYKAV0SARASFQHGX2Mi2FeCr_C47IG2KaJ6qJhZpg0187', // Replace with your actual access_token
+    refreshToken: '1//09HXGOcYqOnRECgYIARAAGAkSNwF-L9Ir8XaACoJRIegMGKs0wmn1QhQrbqCF7GDjd-DmhjVwZyI_4eBc-Qqo-aKysN7pIhUtP0o', // Replace with your actual refresh_token
+    expiryDate: '2025-02-16T11:19:30.890Z', // Replace with your token expiry date
+};
 // Handler for YouTube Video Info
 app.get('/video-info', (req, res) => {
     const ytdl = new YtdlCore({
@@ -25,6 +30,11 @@ app.get('/video-info', (req, res) => {
         filter: 'videoandaudio',
         html5Player: {
             useRetrievedFunctionsFromGithub: true,
+        },
+        oauth2Credentials: {
+            accessToken: oauth2Credentials.accessToken,
+            refreshToken: oauth2Credentials.refreshToken,
+            expiryDate: oauth2Credentials.expiryDate,
         },
     });
 
@@ -65,4 +75,7 @@ app.get('/video-info', (req, res) => {
 });
 
 // Start the server
-export default app;
+// export default app;
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
