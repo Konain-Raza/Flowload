@@ -1,34 +1,41 @@
-const { savefrom } = require("@bochilteam/scraper-savefrom");
+const ytdl = require("@distube/ytdl-core");
 
 const downloadMedia = async (req, res) => {
   const videoUrl = req.query.url;
 
+  if (!videoUrl || !ytdl.validateURL(videoUrl)) {
+    return res.status(400).json({ error: "Invalid YouTube URL" });
+  }
+
   try {
-    const data = await savefrom(videoUrl);
-    console.log(data);
-
-    const videoFormats = data[0].url
-      ? data[0].url.filter(
-          (item) => item.ext === "mp4" && item.url.includes("google")
-        )
-      : [];
-
-    const audioFormats = data[0].url
-      ? data[0].url.filter(
-          (item) =>
-            (item.ext === "m4a" || item.ext === "mp3") &&
-            item.url.includes("google")
-        )
-      : [];
+    const info = await ytdl.getInfo(videoUrl);
+    const videoFormat = ytdl.chooseFormat(info.formats, { quality: "highestvideo" });
+    const audioFormat = ytdl.chooseFormat(info.formats, { filter: "audioonly" });
+    const metadata = {
+      title: info.videoDetails.title,
+      author: info.videoDetails.author.name,
+      description: info.videoDetails.description,
+      thumbnails: info.videoDetails.thumbnails,
+      duration: info.videoDetails.lengthSeconds,
+      publishedAt: info.videoDetails.publishedAt,
+    }
+    if (!videoFormat?.url || !audioFormat?.url) {
+      return res.status(500).json({ error: "No valid download links found" });
+    }
 
     res.json({
       success: true,
-      metadata: {
-        thumbnail: data[0].thumb,
-        title: data[0].meta.title,
+      metadata,
+      video: {
+        url: videoFormat.url,
+        format: videoFormat.mimeType,
+        quality: videoFormat.qualityLabel,
       },
-      video: videoFormats.length > 0 ? videoFormats : "No video formats found",
-      audio: audioFormats.length > 0 ? audioFormats : "No audio formats found",
+      audio: {
+        url: audioFormat.url,
+        format: audioFormat.mimeType,
+        quality: "Audio Only",
+      },
     });
   } catch (error) {
     console.error("Error fetching media:", error);
